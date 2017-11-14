@@ -1,5 +1,5 @@
 Spaceship bob = new Spaceship();
-Asteroid [] rockos= new Asteroid[10];
+ArrayList <Asteroid> rockos= new ArrayList <Asteroid>();
 Stars [] starField = new Stars[50];
 boolean accel = false;
 boolean turnR = false;
@@ -9,8 +9,8 @@ public void setup()
   size(500,500);
   for (int i=0;i<starField.length;i++)
   starField[i] = new Stars();
-  for (int i=0;i<rockos.length;i++)
-  rockos[i] = new Asteroid();
+  for (int i=0;i<10;i++)
+  rockos.add(new Asteroid());
 }
 public void draw() 
 {
@@ -25,10 +25,13 @@ public void draw()
   bob.show();
   for (int i=0;i<starField.length;i++)
   starField[i].show();
-  for (int i=0;i<rockos.length;i++)
+  for (int i=0;i<rockos.size();i++)
   {
-  rockos[i].move();
-  rockos[i].show();
+  rockos.get(i).move();
+  if (dist(rockos.get(i).getX(),rockos.get(i).getY(),bob.getX(),bob.getY())<=20)
+  rockos.remove(i);
+  else
+  rockos.get(i).show();
   }
 }
 public void keyPressed()
