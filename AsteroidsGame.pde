@@ -1,5 +1,6 @@
 Spaceship bob = new Spaceship();
 ArrayList <Asteroid> rockos= new ArrayList <Asteroid>();
+ArrayList <Bullet> shootos= new ArrayList <Bullet>();
 Stars [] starField = new Stars[50];
 boolean accel = false;
 boolean turnR = false;
@@ -27,11 +28,23 @@ public void draw()
   starField[i].show();
   for (int i=0;i<rockos.size();i++)
   {
-  rockos.get(i).move();
-  if (dist(rockos.get(i).getX(),rockos.get(i).getY(),bob.getX(),bob.getY())<=20)
-  rockos.remove(i);
-  else
-  rockos.get(i).show();
+    rockos.get(i).move();
+    if (dist(rockos.get(i).getX(),rockos.get(i).getY(),bob.getX(),bob.getY())<=20)
+    rockos.remove(i);
+    else
+    rockos.get(i).show();
+  }
+  for (int i=0;i<shootos.size();i++)
+  {
+    shootos.get(i).move();
+    for (int r=0;r<rockos.size();r++)
+    if (dist(rockos.get(r).getX(),rockos.get(r).getY(),shootos.get(i).getX(),shootos.get(i).getY())<=20)
+    {
+      rockos.remove(r);
+      shootos.remove(i);
+      break;
+    }
+    shootos.get(i).show();
   }
 }
 public void keyPressed()
@@ -50,6 +63,8 @@ public void keyPressed()
     bob.setDirectionY(0);
     bob.setPointDirection((int)(Math.random()*360));
   }
+  if (key == ' ')
+  shootos.add(new Bullet(bob));
 }
 public void keyReleased()
 {
