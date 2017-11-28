@@ -5,6 +5,10 @@ Stars [] starField = new Stars[50];
 boolean accel = false;
 boolean turnR = false;
 boolean turnL = false;
+boolean shoot = false;
+boolean addAst = false;
+int timerS = 0;
+int timerA = 0;
 public void setup() 
 {
   size(500,500);
@@ -16,6 +20,7 @@ public void setup()
 public void draw() 
 {
   background(0);
+  makeObj();
   if (accel==true)
   bob.accelerate(0.1);
   if (turnL==true)
@@ -26,26 +31,11 @@ public void draw()
   bob.show();
   for (int i=0;i<starField.length;i++)
   starField[i].show();
+  checkCollision();
   for (int i=0;i<rockos.size();i++)
-  {
-    rockos.get(i).move();
-    if (dist(rockos.get(i).getX(),rockos.get(i).getY(),bob.getX(),bob.getY())<=20)
-    rockos.remove(i);
-    else
-    rockos.get(i).show();
-  }
+  rockos.get(i).show();
   for (int i=0;i<shootos.size();i++)
-  {
-    shootos.get(i).move();
-    for (int r=0;r<rockos.size();r++)
-    if (dist(rockos.get(r).getX(),rockos.get(r).getY(),shootos.get(i).getX(),shootos.get(i).getY())<=20)
-    {
-      rockos.remove(r);
-      shootos.remove(i);
-      break;
-    }
-    shootos.get(i).show();
-  }
+  shootos.get(i).show();
 }
 public void keyPressed()
 {
@@ -64,7 +54,9 @@ public void keyPressed()
     bob.setPointDirection((int)(Math.random()*360));
   }
   if (key == ' ')
-  shootos.add(new Bullet(bob));
+  shoot = true;
+  if (key == 'r')
+  addAst = true;
 }
 public void keyReleased()
 {
@@ -74,4 +66,45 @@ public void keyReleased()
   turnR = false;
   if (key=='w')
   accel = false;
+  if (key==' ')
+  shoot = false;
+  if (key=='r')
+  addAst = false;
+}
+public void makeObj()
+{
+  timerS--;
+  if (timerS < 0) {timerS=0;}
+  if (shoot ==true && timerS==0)
+  {
+  shootos.add(new Bullet(bob));
+  timerS = 50;
+  }
+  timerA--;
+  if (timerA < 0) {timerA=0;}
+  if (addAst ==true && timerA==0)
+  {
+    rockos.add(new Asteroid());
+    timerA = 50;
+  }
+}
+public void checkCollision()
+{
+    for (int i=0;i<rockos.size();i++)
+  {
+    rockos.get(i).move();
+    if (dist(rockos.get(i).getX(),rockos.get(i).getY(),bob.getX(),bob.getY())<=20)
+    rockos.remove(i);
+  }
+  for (int i=0;i<shootos.size();i++)
+  {
+    shootos.get(i).move();
+    for (int r=0;r<rockos.size();r++)
+    if (dist(rockos.get(r).getX(),rockos.get(r).getY(),shootos.get(i).getX(),shootos.get(i).getY())<=20)
+    {
+      rockos.remove(r);
+      shootos.remove(i);
+      break;
+    }
+  }
 }
