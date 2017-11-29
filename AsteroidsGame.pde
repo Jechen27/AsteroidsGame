@@ -9,6 +9,8 @@ boolean shoot = false;
 boolean addAst = false;
 int timerS = 0;
 int timerA = 0;
+int lives = 3;
+int score = 0;
 public void setup() 
 {
   size(500,500);
@@ -36,6 +38,16 @@ public void draw()
   rockos.get(i).show();
   for (int i=0;i<shootos.size();i++)
   shootos.get(i).show();
+  textSize(12);
+  text("Lives: "+lives,450,25);
+  text("Score: "+score,10,25);
+  if (lives<1)
+  lives=0;
+  if (lives == 0)
+  {
+  textSize(32);
+  text("Game Over",170,250);
+  }
 }
 public void keyPressed()
 {
@@ -90,11 +102,14 @@ public void makeObj()
 }
 public void checkCollision()
 {
-    for (int i=0;i<rockos.size();i++)
+  for (int i=0;i<rockos.size();i++)
   {
     rockos.get(i).move();
     if (dist(rockos.get(i).getX(),rockos.get(i).getY(),bob.getX(),bob.getY())<=20)
+    {
     rockos.remove(i);
+    lives--;
+    }
   }
   for (int i=0;i<shootos.size();i++)
   {
@@ -104,6 +119,9 @@ public void checkCollision()
     {
       rockos.remove(r);
       shootos.remove(i);
+      score+=100;
+      if(score%1000==0)
+      lives++;
       break;
     }
   }
