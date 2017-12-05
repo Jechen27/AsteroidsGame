@@ -7,10 +7,12 @@ boolean turnR = false;
 boolean turnL = false;
 boolean shoot = false;
 boolean addAst = false;
+boolean laser = false;
 int timerS = 0;
 int timerA = 0;
 int lives = 3;
 int score = 0;
+int limiter = 0;
 public void setup() 
 {
   size(500,500);
@@ -69,6 +71,8 @@ public void keyPressed()
   shoot = true;
   if (key == 'r')
   addAst = true;
+  if (key == 'l')
+  laser = !laser;
 }
 public void keyReleased()
 {
@@ -89,8 +93,17 @@ public void makeObj()
   if (timerS < 0) {timerS=0;}
   if (shoot ==true && timerS==0)
   {
-  shootos.add(new Bullet(bob));
-  timerS = 50;
+    shootos.add(new Bullet(bob));
+    if (laser==true && limiter < 2)
+    {
+      timerS = 3;
+      limiter++;
+    }
+    else
+    {
+    timerS = 50;
+    limiter = 0;
+    } 
   }
   timerA--;
   if (timerA < 0) {timerA=0;}
